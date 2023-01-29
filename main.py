@@ -42,7 +42,7 @@ class Warrior(Character):
 
 class Mage(Character):
     BRIEF_DESC_CHAR_CLASS = (' находчивый воин дальнего боя. '
-                             'Обладает высоким интелектом')
+                             'Обладает высоким интеллектом')
     RANGE_VALUE_ATTACK = (5, 10)
     RANGE_VALUE_DEFENCE = (-2, 2)
     SPECIAL_BUFF = DEFAULT_ATTACK + 40
@@ -58,6 +58,56 @@ class Healer(Character):
     SPECIAL_SKILL = 'Защита'
 
 
-warrior = Warrior('Кодослав')
-print(warrior)
-print(warrior.attack())
+def start_training(char_name: str, character: Character):
+    """
+    Принимает на вход имя и класс персонажа.
+    Возвращает сообщения о результатах цикла тренировки персонажа.
+    """
+    commands = {
+        'attack': character.attack,
+        'defence': character.defence,
+        'special': character.special,
+               
+    }
+    cmd = None
+    while cmd != 'skip':
+        cmd = input('Введи команду: ')
+        if cmd in commands:
+            print(commands[cmd]())
+    return 'Тренировка окончена.'
+
+
+def choice_char_class(char_name: str) -> Character:
+    """
+    Возвращает строку с выбранным
+    классом персонажа.
+    """
+    game_classes = {
+        'warrior': Warrior,
+        'mage': Mage,
+        'healer': Healer,
+    }
+
+    approve_choice: str = None
+
+    while approve_choice != 'y':
+        selected_class = input('Введи название персонажа, '
+                               'за которого хочешь играть: Воитель — warrior, '
+                               'Маг — mage, Лекарь — healer: ')
+        char_class: Character = game_classes[selected_class](char_name)
+        print(char_class)
+        approve_choice = input('Нажми (Y), чтобы подтвердить выбор, '
+                               'или любую другую кнопку, '
+                               'чтобы выбрать другого персонажа ').lower()
+    return char_class
+
+
+print('Приветствую тебя, искатель приключений!')
+print('Прежде чем начать игру...')
+char_name: str = input('...назови себя: ')
+print(f'Здравствуй, {char_name}! '
+       'Сейчас твоя выносливость — 80, атака — 5 и защита — 10.')
+print('Ты можешь выбрать один из трёх путей силы:')
+print('Воитель, Маг, Лекарь')
+char_class: str = choice_char_class(char_name)
+print(start_training(char_name, char_class))
